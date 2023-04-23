@@ -13,4 +13,7 @@ public class RegisterRequestModel
 
     [Required]
     public string Password { get; init; }
+
+    [Required]
+    public string Role { get; init; }
 }
