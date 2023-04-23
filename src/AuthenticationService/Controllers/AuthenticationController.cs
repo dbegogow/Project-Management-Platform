@@ -1,6 +1,6 @@
-﻿using AuthenticationService.Models.Data;
+﻿using AuthenticationService.Infrastructure.Attributes;
+using AuthenticationService.Models.Data;
 using AuthenticationService.Models.Request;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,7 +26,7 @@ public class AuthenticationController : ControllerBase
 
     [HttpPost]
     [Route(nameof(Register))]
-    [Authorize(Roles = AdminRole)]
+    [AuthorizeRoles(AdminRole, ManagerRole)]
     public async Task<IActionResult> Register(RegisterRequestModel model)
     {
         var role = await this._roleManager.RoleExistsAsync(model.Role);
