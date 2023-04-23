@@ -12,7 +12,7 @@ public static class ServiceCollectionExtensions
 
         services
             .AddIdentity<User, Role>()
-            .AddMongoDbStores<User, Role, Guid>(
+            .AddMongoDbStores<User, Role, string>(
                 mongoDbConfiguration.ConnectionString,
                 mongoDbConfiguration.Name);
 

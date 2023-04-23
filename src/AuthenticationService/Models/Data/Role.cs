@@ -4,6 +4,6 @@ using MongoDbGenericRepository.Attributes;
 namespace AuthenticationService.Models.Data;
 
 [CollectionName("Roles")]
-public class Role : MongoIdentityRole<Guid>
+public class Role : MongoIdentityRole<string>
 {
 }
