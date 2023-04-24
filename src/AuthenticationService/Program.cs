@@ -6,21 +6,16 @@ var configuration = builder.Configuration;
 
 builder.Services
     .AddEndpointsApiExplorer()
-    .AddSwaggerGen()
     .AddIdentity(configuration)
     .AddJwtAuthentication(configuration)
+    .AddApplicationServices()
+    .AddSwagger()
     .AddControllers();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app
-        .UseSwagger()
-        .UseSwaggerUI();
-}
-
 app
+    .UseSwaggerUI()
     .UseHttpsRedirection()
     .UseAuthorization()
     .UseAuthentication()
