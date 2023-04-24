@@ -1,6 +1,6 @@
 ﻿namespace AuthenticationService.Services;
 
-public interface IAuthenticationService
+public interface IIdentityService
 {
-    string GenerateJwtToken(string userId, string userName, string secret);
+    string GenerateJwtToken(string userId, string userName);
 }

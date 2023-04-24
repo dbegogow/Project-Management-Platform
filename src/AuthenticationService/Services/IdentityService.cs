@@ -1,16 +1,21 @@
 ﻿using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using AuthenticationService.Infrastructure.Extensions;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AuthenticationService.Services;
 
-public class AuthenticationService : IAuthenticationService
+public class IdentityService : IIdentityService
 {
-    public string GenerateJwtToken(string userId, string userName, string secret)
+    private readonly IConfiguration _configuration;
+
+    public string GenerateJwtToken(string userId, string userName)
     {
+        var jwtConfiguration = this._configuration.GetJwtConfigurations();
+
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(secret);
+        var key = Encoding.ASCII.GetBytes(jwtConfiguration.Secret);
 
         var tokenDescription = new SecurityTokenDescriptor
         {

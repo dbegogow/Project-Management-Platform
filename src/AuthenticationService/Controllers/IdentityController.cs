@@ -1,6 +1,8 @@
 ﻿using AuthenticationService.Infrastructure.Attributes;
 using AuthenticationService.Models.Data;
 using AuthenticationService.Models.Request;
+using AuthenticationService.Models.Response
+using AuthenticationService.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,17 +13,21 @@ namespace AuthenticationService.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthenticationController : ControllerBase
+public class IdentityController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<Role> _roleManager;
 
-    public AuthenticationController(
+    private readonly IIdentityService _identityService;
+
+    public IdentityController(
         UserManager<User> userManager,
-        RoleManager<Role> roleManager)
+        RoleManager<Role> roleManager,
+        IIdentityService identityService)
     {
         this._userManager = userManager;
         this._roleManager = roleManager;
+        this._identityService = identityService;
     }
 
     [HttpPost]
@@ -51,6 +57,13 @@ public class AuthenticationController : ControllerBase
             return BadRequest(result.Errors);
         }
 
-        return Ok();
+        var token = this._identityService.GenerateJwtToken(
+               user.Id,
+               user.UserName);
+
+        return Ok(new IdentityResponseModel
+        {
+            Token = token
+        });
     }
 }

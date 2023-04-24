@@ -2,10 +2,8 @@
 using AuthenticationService.Models.Data;
 using AuthenticationService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MongoDB.Driver;
 
 namespace AuthenticationService.Infrastructure.Extensions;
 
