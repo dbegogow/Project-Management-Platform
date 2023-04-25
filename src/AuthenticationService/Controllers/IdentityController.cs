@@ -50,12 +50,12 @@ public class IdentityController : ControllerBase
 
         var result = await this._userManager.CreateAsync(user, model.Password);
 
-        await this._userManager.AddToRoleAsync(user, model.Role);
-
         if (!result.Succeeded)
         {
             return BadRequest(result.Errors);
         }
+
+        await this._userManager.AddToRoleAsync(user, model.Role);
 
         var token = this._identityService.GenerateJwtToken(
                user.Id,
