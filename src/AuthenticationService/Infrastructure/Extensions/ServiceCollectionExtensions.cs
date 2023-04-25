@@ -2,6 +2,7 @@
 using AuthenticationService.Models.Data;
 using AuthenticationService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -16,6 +17,10 @@ public static class ServiceCollectionExtensions
         var mongoDbConfiguration = configuration.GetMongoDbConfigurations();
 
         services
+            .Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = false;
+            })
             .AddIdentity<User, Role>()
             .AddMongoDbStores<User, Role, string>(
                 mongoDbConfiguration.ConnectionString,
