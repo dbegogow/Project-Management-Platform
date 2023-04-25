@@ -8,6 +8,5 @@ public static class ApplicationBuilderExtensions
                 .UseSwaggerUI(options =>
                 {
                     options.SwaggerEndpoint("/swagger/v1/swagger.json", "Project Management System - Authentication Service");
-                    options.RoutePrefix = string.Empty;
                 });
 }
