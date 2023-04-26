@@ -10,6 +10,9 @@ public class IdentityService : IIdentityService
 {
     private readonly IConfiguration _configuration;
 
+    public IdentityService(IConfiguration configuration)
+        => this._configuration = configuration;
+
     public string GenerateJwtToken(string userId, string userName)
     {
         var jwtConfiguration = this._configuration.GetJwtConfigurations();

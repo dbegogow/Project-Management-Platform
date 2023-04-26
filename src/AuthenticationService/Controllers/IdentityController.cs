@@ -1,7 +1,7 @@
 ﻿using AuthenticationService.Infrastructure.Attributes;
 using AuthenticationService.Models.Data;
 using AuthenticationService.Models.Request;
-using AuthenticationService.Models.Response
+using AuthenticationService.Models.Response;
 using AuthenticationService.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
