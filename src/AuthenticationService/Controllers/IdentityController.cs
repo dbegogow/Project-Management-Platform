@@ -80,6 +80,7 @@ public class IdentityController : ControllerBase
         }
 
         var passwordValid = await this._userManager.CheckPasswordAsync(user, model.Password);
+
         if (!passwordValid)
         {
             return Unauthorized();
