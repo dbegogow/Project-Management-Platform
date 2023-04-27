@@ -13,7 +13,7 @@ public class IdentityService : IIdentityService
     public IdentityService(IConfiguration configuration)
         => this._configuration = configuration;
 
-    public string GenerateJwtToken(string userId, string userName)
+    public string GenerateJwtToken(string userId, string userName, string role)
     {
         var jwtConfiguration = this._configuration.GetJwtConfigurations();
 
@@ -25,7 +25,8 @@ public class IdentityService : IIdentityService
             Subject = new ClaimsIdentity(new Claim[]
             {
                     new Claim(ClaimTypes.NameIdentifier, userId),
-                    new Claim(ClaimTypes.Name, userName)
+                    new Claim(ClaimTypes.Name, userName),
+                    new Claim(ClaimTypes.Role, role)
             }),
             Expires = DateTime.UtcNow.AddDays(1),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

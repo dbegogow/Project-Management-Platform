@@ -2,5 +2,5 @@
 
 public interface IIdentityService
 {
-    string GenerateJwtToken(string userId, string userName);
+    string GenerateJwtToken(string userId, string userName, string role);
 }

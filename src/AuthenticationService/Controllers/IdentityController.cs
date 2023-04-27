@@ -59,7 +59,8 @@ public class IdentityController : ControllerBase
 
         var token = this._identityService.GenerateJwtToken(
                user.Id,
-               user.UserName);
+               user.UserName,
+               model.Role);
 
         return Ok(new IdentityResponseModel
         {
@@ -67,7 +68,7 @@ public class IdentityController : ControllerBase
         });
     }
 
-    [HttpGet]
+    [HttpPost]
     [Route(nameof(Login))]
     public async Task<IActionResult> Login([FromBody] LoginRequestModel model)
     {
@@ -84,9 +85,14 @@ public class IdentityController : ControllerBase
             return Unauthorized();
         }
 
+        var role = (await this._userManager
+            .GetRolesAsync(user))
+            .FirstOrDefault();
+
         var token = this._identityService.GenerateJwtToken(
             user.Id,
-            user.Email);
+            user.Email,
+            role);
 
         return Ok(new IdentityResponseModel
         {
