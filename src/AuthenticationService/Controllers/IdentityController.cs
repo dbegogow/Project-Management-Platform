@@ -33,7 +33,7 @@ public class IdentityController : ControllerBase
     [HttpPost]
     [Route(nameof(Register))]
     [AuthorizeRoles(AdminRole, ManagerRole)]
-    public async Task<IActionResult> Register(RegisterRequestModel model)
+    public async Task<IActionResult> Register([FromBody] RegisterRequestModel model)
     {
         var role = await this._roleManager.RoleExistsAsync(model.Role);
 
@@ -60,6 +60,33 @@ public class IdentityController : ControllerBase
         var token = this._identityService.GenerateJwtToken(
                user.Id,
                user.UserName);
+
+        return Ok(new IdentityResponseModel
+        {
+            Token = token
+        });
+    }
+
+    [HttpGet]
+    [Route(nameof(Login))]
+    public async Task<IActionResult> Login([FromBody] LoginRequestModel model)
+    {
+        var user = await this._userManager.FindByEmailAsync(model.Email);
+
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+
+        var passwordValid = await this._userManager.CheckPasswordAsync(user, model.Password);
+        if (!passwordValid)
+        {
+            return Unauthorized();
+        }
+
+        var token = this._identityService.GenerateJwtToken(
+            user.Id,
+            user.Email);
 
         return Ok(new IdentityResponseModel
         {
