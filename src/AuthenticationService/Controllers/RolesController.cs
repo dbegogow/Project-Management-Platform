@@ -21,7 +21,7 @@ public class RolesController : ControllerBase
 
     [HttpPost]
     [Route(nameof(Create))]
-    //[AuthorizeRoles(AdminRole)]
+    [AuthorizeRoles(AdminRole)]
     public async Task<IActionResult> Create([FromBody][Required] string roleName)
     {
         var result = await this._roleManager.CreateAsync(new Role() { Name = roleName });
