@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using AuthenticationService.Infrastructure.Attributes;
 using AuthenticationService.Models.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

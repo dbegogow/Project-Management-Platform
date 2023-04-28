@@ -1,5 +1,4 @@
-﻿using AuthenticationService.Infrastructure.Attributes;
-using AuthenticationService.Models.Data;
+﻿using AuthenticationService.Models.Data;
 using AuthenticationService.Models.Request;
 using AuthenticationService.Models.Response;
 using AuthenticationService.Services;
