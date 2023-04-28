@@ -17,7 +17,6 @@ var app = builder.Build();
 app
     .UseSwaggerUI()
     .UseHttpsRedirection()
-    .UseAuthorization()
     .UseAuthentication()
     .UseAuthorization();
 
