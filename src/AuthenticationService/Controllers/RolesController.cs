@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using AuthenticationService.Infrastructure.Attributes;
 using AuthenticationService.Models.Data;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +21,7 @@ public class RolesController : ControllerBase
 
     [HttpPost]
     [Route(nameof(Create))]
-    [Authorize(Roles = AdminRole)]
+    [AuthorizeRoles(AdminRole)]
     public async Task<IActionResult> Create([FromBody][Required] string roleName)
     {
         var result = await this._roleManager.CreateAsync(new Role() { Name = roleName });

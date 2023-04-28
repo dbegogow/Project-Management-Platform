@@ -1,8 +1,8 @@
-﻿using AuthenticationService.Models.Data;
+﻿using AuthenticationService.Infrastructure.Attributes;
+using AuthenticationService.Models.Data;
 using AuthenticationService.Models.Request;
 using AuthenticationService.Models.Response;
 using AuthenticationService.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,7 +32,7 @@ public class IdentityController : ControllerBase
 
     [HttpPost]
     [Route(nameof(Register))]
-    [Authorize(Roles = $"{AdminRole}, {ManagerRole}")]
+    [AuthorizeRoles(AdminRole, ManagerRole)]
     public async Task<IActionResult> Register([FromBody] RegisterRequestModel model)
     {
         var role = await this._roleManager.RoleExistsAsync(model.Role);
