@@ -1,8 +1,11 @@
 ﻿using AuthenticationService.Infrastructure.Attributes;
+using AuthenticationService.Infrastructure.Extensions;
 using AuthenticationService.Models.Data;
 using AuthenticationService.Models.Request;
 using AuthenticationService.Models.Response;
 using AuthenticationService.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -99,5 +102,15 @@ public class IdentityController : ControllerBase
         {
             Token = token
         });
+    }
+
+    [HttpGet]
+    [Route(nameof(VerifyToken))]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> VerifyToken()
+    {
+        var userId = User.GetId();
+
+        return NoContent();
     }
 }
