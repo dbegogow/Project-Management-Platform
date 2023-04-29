@@ -1,4 +1,4 @@
-﻿namespace AuthenticationService.Services;
+﻿namespace AuthenticationService.Services.Identity;
 
 public interface IIdentityService
 {

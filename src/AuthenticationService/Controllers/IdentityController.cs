@@ -3,7 +3,7 @@ using AuthenticationService.Infrastructure.Extensions;
 using AuthenticationService.Models.Data;
 using AuthenticationService.Models.Request;
 using AuthenticationService.Models.Response;
-using AuthenticationService.Services;
+using AuthenticationService.Services.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
