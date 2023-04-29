@@ -109,7 +109,7 @@ public class IdentityController : ControllerBase
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> VerifyToken()
     {
-        var userId = User.GetId();
+        var userId = User.GetRoles();
 
         return NoContent();
     }
