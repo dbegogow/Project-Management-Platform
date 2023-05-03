@@ -4,6 +4,7 @@ using AuthenticationService.Models.Data;
 using AuthenticationService.Models.Request;
 using AuthenticationService.Models.Response;
 using AuthenticationService.Services.Identity;
+using AuthenticationService.Services.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -22,15 +23,18 @@ public class IdentityController : ControllerBase
     private readonly RoleManager<Role> _roleManager;
 
     private readonly IIdentityService _identityService;
+    private readonly IUsersService _usersService;
 
     public IdentityController(
         UserManager<User> userManager,
         RoleManager<Role> roleManager,
-        IIdentityService identityService)
+        IIdentityService identityService,
+        IUsersService usersService)
     {
         this._userManager = userManager;
         this._roleManager = roleManager;
         this._identityService = identityService;
+        this._usersService = usersService;
     }
 
     [HttpPost]
@@ -109,7 +113,10 @@ public class IdentityController : ControllerBase
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> VerifyToken()
     {
-        var userId = User.GetRoles();
+        var userId = User.GetId();
+        var role = User.GetRole();
+
+        await this._usersService.ValidateUser(userId, role);
 
         return NoContent();
     }
