@@ -28,10 +28,13 @@ public class UsersService : IUsersService
         var usersQuerableCollection = this._usersCollection.AsQueryable();
         var rolesQuerableCollection = this._rolesCollection.AsQueryable();
 
-        var userRoles = from u in usersQuerableCollection
-                        
+        var query = from u in usersQuerableCollection
+                    let ur = from r in rolesQuerableCollection
+                             where u.Roles.AsQueryable().Contains(r.Id)
+                             select r
+                    select new { User = u, Roles = ur };
 
-        var a = userRoles.
+        var a = query.ToList();
 
         return true;
     }
