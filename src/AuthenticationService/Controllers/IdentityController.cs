@@ -111,13 +111,18 @@ public class IdentityController : ControllerBase
     [HttpGet]
     [Route(nameof(VerifyToken))]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<IActionResult> VerifyToken()
+    public async Task<IActionResult> VerifyToken([FromQuery] string role)
     {
         var userId = User.GetId();
-        var role = User.GetRole();
 
-        await this._usersService.ValidateUser("adasd", role);
+        var result = await this._usersService
+             .ValidateUser(userId, role);
 
-        return NoContent();
+        if (!result)
+        {
+            return Unauthorized();
+        }
+
+        return Ok();
     }
 }
