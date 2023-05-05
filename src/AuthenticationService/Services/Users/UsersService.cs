@@ -1,6 +1,7 @@
 ﻿using AuthenticationService.Infrastructure.Extensions;
 using AuthenticationService.Models.Data;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace AuthenticationService.Services.Users;
 
@@ -9,8 +10,8 @@ public class UsersService : IUsersService
     private const string UsersCollectionName = "Users";
     private const string RolesCollectionName = "Roles";
 
-    private readonly IMongoCollection<User> _usersCollection;
-    private readonly IMongoCollection<Role> _rolesCollection;
+    private readonly IMongoQueryable<User> _usersCollection;
+    private readonly IMongoQueryable<Role> _rolesCollection;
 
     public UsersService(IConfiguration configuration)
     {
@@ -19,33 +20,40 @@ public class UsersService : IUsersService
         var mongoClient = new MongoClient(mongoDbConfiguration.ConnectionString);
         var mongoDb = mongoClient.GetDatabase(mongoDbConfiguration.Name);
 
-        this._usersCollection = mongoDb.GetCollection<User>(UsersCollectionName);
-        this._rolesCollection = mongoDb.GetCollection<Role>(RolesCollectionName);
+        this._usersCollection = mongoDb
+            .GetCollection<User>(UsersCollectionName)
+            .AsQueryable();
+
+        this._rolesCollection = mongoDb
+            .GetCollection<Role>(RolesCollectionName)
+            .AsQueryable();
     }
 
     public async Task<bool> ValidateUser(string id, string roleName)
     {
-        var usersQuerableCollection = this._usersCollection.AsQueryable();
-        var rolesQuerableCollection = this._rolesCollection.AsQueryable();
+        var userRoleIdsQuery = from u in this._usersCollection
+                               where u.Id == id
+                               from r in u.Roles
+                               select r;
 
-        var userRolesQuery = from u in usersQuerableCollection
-                             where u.Id == id
-                             from r in u.Roles
-                             select r;
+        var userRoleId = userRoleIdsQuery.FirstOrDefault();
 
-        var userRole = userRolesQuery.FirstOrDefault();
+        if (userRoleId == null)
+        {
+            return await Task.FromResult(false);
+        }
 
-        var userRoleNameQuery = from r in rolesQuerableCollection
-                                where r.Id == userRole
+        var userRoleNameQuery = from r in this._rolesCollection
+                                where r.Id == userRoleId
                                 select r.Name;
 
         var userRoleName = userRoleNameQuery.FirstOrDefault();
 
         if (userRoleName != roleName)
         {
-            return false;
+            return await Task.FromResult(false);
         }
 
-        return true;
+        return await Task.FromResult(true);
     }
 }

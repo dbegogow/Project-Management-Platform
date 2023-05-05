@@ -116,7 +116,7 @@ public class IdentityController : ControllerBase
         var userId = User.GetId();
         var role = User.GetRole();
 
-        await this._usersService.ValidateUser(userId, role);
+        await this._usersService.ValidateUser("adasd", role);
 
         return NoContent();
     }
