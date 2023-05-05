@@ -1,4 +1,5 @@
-﻿using AuthenticationService.Infrastructure.Attributes;
+﻿using System.ComponentModel.DataAnnotations;
+using AuthenticationService.Infrastructure.Attributes;
 using AuthenticationService.Infrastructure.Extensions;
 using AuthenticationService.Models.Data;
 using AuthenticationService.Models.Request;
@@ -111,7 +112,7 @@ public class IdentityController : ControllerBase
     [HttpGet]
     [Route(nameof(VerifyToken))]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<IActionResult> VerifyToken([FromQuery] string role)
+    public async Task<IActionResult> VerifyToken([FromQuery][Required] string role)
     {
         var userId = User.GetId();
 
