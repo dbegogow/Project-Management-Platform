@@ -28,13 +28,23 @@ public class UsersService : IUsersService
         var usersQuerableCollection = this._usersCollection.AsQueryable();
         var rolesQuerableCollection = this._rolesCollection.AsQueryable();
 
-        var query = from u in usersQuerableCollection
-                    let ur = from r in rolesQuerableCollection
-                             where u.Roles.AsQueryable().Contains(r.Id)
-                             select r
-                    select new { User = u, Roles = ur };
+        var userRolesQuery = from u in usersQuerableCollection
+                             where u.Id == id
+                             from r in u.Roles
+                             select r;
 
-        var a = query.ToList();
+        var userRole = userRolesQuery.FirstOrDefault();
+
+        var userRoleNameQuery = from r in rolesQuerableCollection
+                                where r.Id == userRole
+                                select r.Name;
+
+        var userRoleName = userRoleNameQuery.FirstOrDefault();
+
+        if (userRoleName != roleName)
+        {
+            return false;
+        }
 
         return true;
     }
