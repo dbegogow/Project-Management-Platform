@@ -14,7 +14,7 @@ public class TeamsController : ControllerBase
     }
 
     [HttpPost]
-    [AuthorizeUser(AdminRole)]
+    [AuthorizeUser(AdminRole, ManagerRole)]
     public async Task<IActionResult> Create()
     {
         return Ok();

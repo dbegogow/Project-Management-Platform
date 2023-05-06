@@ -2,5 +2,5 @@
 
 public interface IUsersService
 {
-    Task<bool> ValidateUser(string id, string role);
+    Task<bool> ValidateUser(string id, IEnumerable<string> role);
 }

@@ -29,7 +29,7 @@ public class UsersService : IUsersService
             .AsQueryable();
     }
 
-    public async Task<bool> ValidateUser(string id, string roleName)
+    public async Task<bool> ValidateUser(string id, IEnumerable<string> roleNames)
     {
         var userRoleIdsQuery = from u in this._usersCollection
                                where u.Id == id
@@ -49,7 +49,7 @@ public class UsersService : IUsersService
 
         var userRoleName = userRoleNameQuery.FirstOrDefault();
 
-        if (userRoleName != roleName)
+        if (!roleNames.Contains(userRoleName))
         {
             return await Task.FromResult(false);
         }

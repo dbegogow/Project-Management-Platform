@@ -2,12 +2,13 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 
 namespace TeamService.Infrastructure.Attributes;
 
 public class AuthorizeUserAttribute : Attribute, IAsyncActionFilter
 {
-    private const string RoleQueryParam = "Role";
+    private const string RoleQueryParam = "Roles";
     private const string AuthorizationHeader = "Authorization";
 
     private readonly string[] _roles;
@@ -45,9 +46,9 @@ public class AuthorizeUserAttribute : Attribute, IAsyncActionFilter
         var uri = QueryHelpers
             .AddQueryString(
                 validateTokenUri,
-                new Dictionary<string, string>
+                new Dictionary<string, StringValues>
                 {
-                    [RoleQueryParam] = string.Join(",", this._roles)
+                    [RoleQueryParam] = this._roles
                 });
 
         var request = new HttpRequestMessage(HttpMethod.Get, uri);
