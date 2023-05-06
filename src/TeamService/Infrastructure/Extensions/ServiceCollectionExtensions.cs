@@ -1,11 +1,17 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using TeamService.Services.TeamsService;
+using Microsoft.OpenApi.Models;
 
 namespace TeamService.Infrastructure.Extensions;
 
 public static class ServiceCollectionExtensions
 {
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+        => services
+            .AddTransient<ITeamsService, TeamsService>();
+
+
     public static IServiceCollection AddSwagger(this IServiceCollection services)
-            => services.AddSwaggerGen(c =>
+        => services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc(
                     "v1",

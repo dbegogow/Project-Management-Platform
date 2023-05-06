@@ -1,20 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using MongoDB.Bson.Serialization.Attributes;
 
 using static TeamService.Infrastructure.Validations.Validations;
 
-namespace TeamService.Models.Data;
+namespace TeamService.Models.Requests;
 
-public class Team
+public class CreateTeamRequestModel
 {
-    [BsonId]
-    public string Id { get; init; }
-
-    [BsonRequired]
+    [Required]
     [StringLength(TeamNameMaxLength, MinimumLength = TeamNameMinLength)]
     public string Name { get; init; }
 
-    [BsonRequired]
+    [Required]
     [StringLength(TeamGoalsMaxLenght, MinimumLength = TeamGoalsMinLenght)]
     public string Goals { get; init; }
 

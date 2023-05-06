@@ -1,4 +1,6 @@
 ﻿using TeamService.Infrastructure.Attributes;
+using TeamService.Models.Requests;
+using TeamService.Services.TeamsService;
 using Microsoft.AspNetCore.Mvc;
 
 using static TeamService.Infrastructure.Constants.RoleConstants;
@@ -9,14 +11,18 @@ namespace TeamService.Controllers;
 [Route("api/[controller]")]
 public class TeamsController : ControllerBase
 {
-    public TeamsController()
-    {
-    }
+    private readonly ITeamsService _teamsService;
+
+    public TeamsController(ITeamsService teamsService)
+        => this._teamsService = teamsService;
 
     [HttpPost]
     [AuthorizeUser(AdminRole, ManagerRole)]
-    public async Task<IActionResult> Create()
+    public async Task<IActionResult> Create([FromBody] CreateTeamRequestModel model)
     {
-        return Ok();
+        var newTeamId = await this._teamsService
+            .Create(model.Name, model.Goals, model.Members);
+
+        return Ok(newTeamId);
     }
 }
