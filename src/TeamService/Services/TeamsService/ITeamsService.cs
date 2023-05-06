@@ -1,6 +1,8 @@
-﻿namespace TeamService.Services.TeamsService;
+﻿using TeamService.Models;
+
+namespace TeamService.Services.TeamsService;
 
 public interface ITeamsService
 {
-    Task<string> Create(string name, string goals, IEnumerable<string> members);
+    Task<Result<string>> Create(string name, string goals, IEnumerable<string> members);
 }
