@@ -2,5 +2,5 @@
 
 public class AuthenticationServiceConfig
 {
-    public string ValidateTokenEndpoint { get; init; }
+    public string ValidateTokenUri { get; init; }
 }

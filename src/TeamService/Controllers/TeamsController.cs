@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using TeamService.Infrastructure.Attributes;
+using Microsoft.AspNetCore.Mvc;
 
 using static TeamService.Infrastructure.Constants.RoleConstants;
 
@@ -13,9 +14,9 @@ public class TeamsController : ControllerBase
     }
 
     [HttpPost]
-
+    [AuthorizeUser(AdminRole)]
     public async Task<IActionResult> Create()
     {
-        throw new NotImplementedException();
+        return Ok();
     }
 }
