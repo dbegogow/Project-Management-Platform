@@ -2,12 +2,13 @@
 using System.Text;
 using AuthenticationService.Models.Data;
 using AuthenticationService.Services.Identity;
+using AuthenticationService.Services.Publishing;
 using AuthenticationService.Services.Users;
-using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MassTransit;
 
 namespace AuthenticationService.Infrastructure.Extensions;
 
@@ -65,7 +66,8 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         => services
             .AddTransient<IIdentityService, IdentityService>()
-            .AddTransient<IUsersService, UsersService>();
+            .AddTransient<IUsersService, UsersService>()
+            .AddTransient<IPublishingService, PublishingService>();
 
     public static IServiceCollection AddMassTransiteWithRabbitMq(
         this IServiceCollection services,
