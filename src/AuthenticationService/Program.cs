@@ -9,6 +9,7 @@ builder.Services
     .AddIdentity(configuration)
     .AddJwtAuthentication(configuration)
     .AddApplicationServices()
+    .AddMassTransiteWithRabbitMq(configuration)
     .AddSwagger()
     .AddControllers();
 

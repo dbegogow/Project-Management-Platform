@@ -1,7 +1,9 @@
-﻿using System.Text;
+﻿using System.Reflection;
+using System.Text;
 using AuthenticationService.Models.Data;
 using AuthenticationService.Services.Identity;
 using AuthenticationService.Services.Users;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -61,45 +63,69 @@ public static class ServiceCollectionExtensions
     }
 
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
-            => services
-                .AddTransient<IIdentityService, IdentityService>()
-                .AddTransient<IUsersService, UsersService>();
+        => services
+            .AddTransient<IIdentityService, IdentityService>()
+            .AddTransient<IUsersService, UsersService>();
+
+    public static IServiceCollection AddMassTransiteWithRabbitMq(
+        this IServiceCollection services,
+        IConfiguration configuration)
+        => services.AddMassTransit(c =>
+        {
+            c.AddConsumers(Assembly.GetEntryAssembly());
+
+            c.UsingRabbitMq((context, configurator) =>
+            {
+                var rabbitMqConfiguration = configuration.GetRabbitMqConfigurations();
+
+                configurator.Host(rabbitMqConfiguration.Host);
+
+                var serviceConfiguration = configuration.GetServiceConfigurations();
+
+                configurator.ConfigureEndpoints(
+                    context,
+                    new KebabCaseEndpointNameFormatter(serviceConfiguration.Name, false));
+
+                configurator.UseMessageRetry(
+                    retryConfigurator => retryConfigurator.Interval(3, TimeSpan.FromSeconds(5)));
+            });
+        });
 
     public static IServiceCollection AddSwagger(this IServiceCollection services)
-            => services.AddSwaggerGen(c =>
+        => services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc(
+                "v1",
+                new OpenApiInfo
+                {
+                    Title = "Project Management System - Authentication Service",
+                    Version = "v1"
+                });
+
+            c.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme
             {
-                c.SwaggerDoc(
-                    "v1",
-                    new OpenApiInfo
-                    {
-                        Title = "Project Management System - Authentication Service",
-                        Version = "v1"
-                    });
-
-                c.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme
-                {
-                    Name = "Authorization",
-                    Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
-                });
-
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Name = "Bearer",
-                            In = ParameterLocation.Header,
-                            Reference = new OpenApiReference
-                            {
-                                Id = "Bearer",
-                                Type = ReferenceType.SecurityScheme
-                            }
-                        },
-                        new List<string>()
-                    }
-                });
+                Name = "Authorization",
+                Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer"
             });
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Name = "Bearer",
+                        In = ParameterLocation.Header,
+                        Reference = new OpenApiReference
+                        {
+                            Id = "Bearer",
+                            Type = ReferenceType.SecurityScheme
+                        }
+                    },
+                    new List<string>()
+                }
+            });
+        });
 }
