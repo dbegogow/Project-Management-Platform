@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+ 
 using AuthenticationService.Infrastructure.Attributes;
 using AuthenticationService.Infrastructure.Extensions;
 using AuthenticationService.Models.Data;
@@ -6,6 +7,7 @@ using AuthenticationService.Models.Request;
 using AuthenticationService.Models.Response;
 using AuthenticationService.Services.Identity;
 using AuthenticationService.Services.Users;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
