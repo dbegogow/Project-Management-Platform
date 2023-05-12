@@ -5,6 +5,7 @@ using AuthenticationService.Models.Data;
 using AuthenticationService.Models.Request;
 using AuthenticationService.Models.Response;
 using AuthenticationService.Services.Identity;
+using AuthenticationService.Services.Publishing;
 using AuthenticationService.Services.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -25,17 +26,20 @@ public class IdentityController : ControllerBase
 
     private readonly IIdentityService _identityService;
     private readonly IUsersService _usersService;
+    private readonly IPublishingService _publishingService;
 
     public IdentityController(
         UserManager<User> userManager,
         RoleManager<Role> roleManager,
         IIdentityService identityService,
-        IUsersService usersService)
+        IUsersService usersService,
+        IPublishingService publishingService)
     {
         this._userManager = userManager;
         this._roleManager = roleManager;
         this._identityService = identityService;
         this._usersService = usersService;
+        this._publishingService = publishingService;
     }
 
     [HttpPost]
@@ -64,6 +68,8 @@ public class IdentityController : ControllerBase
         }
 
         await this._userManager.AddToRoleAsync(user, model.Role);
+
+        await this._publishingService.PublishCreatedUser(user.Id, user.UserName);
 
         var token = this._identityService.GenerateJwtToken(
                user.Id,
