@@ -2,9 +2,12 @@ using TeamService.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var configuration = builder.Configuration;
+
 builder.Services
     .AddEndpointsApiExplorer()
     .AddApplicationServices()
+    .AddMassTransiteWithRabbitMq(configuration)
     .AddSwagger()
     .AddControllers();
 
