@@ -58,7 +58,7 @@ public class IdentityController : ControllerBase
 
         if (emailExist)
         {
-            return BadRequest(emailExist);
+            return BadRequest(EmailExist);
         }
 
         var user = new User
