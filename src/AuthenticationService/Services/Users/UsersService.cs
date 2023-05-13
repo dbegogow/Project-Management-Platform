@@ -29,16 +29,16 @@ public class UsersService : IUsersService
 
     public async Task<bool> ValidateUserEmailExist(string email)
     {
-        var user = await this._usersCollection
+        var exist = await this._usersCollection
             .Find(u => u.Email == email)
-            .FirstOrDefaultAsync();
+            .AnyAsync();
 
-        if (user == null)
+        if (exist)
         {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     public async Task<bool> ValidateUser(string id, IEnumerable<string> roleNames)
