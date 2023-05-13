@@ -29,6 +29,22 @@ public class UsersService : IUsersService
             .AsQueryable();
     }
 
+    public async Task<bool> ValidateUserEmailExist(string email)
+    {
+        var userQuery = from u in this._usersCollection
+                        where u.Email == email
+                        select u;
+
+        var user = await userQuery.FirstOrDefaultAsync();
+
+        if (user == null)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     public async Task<bool> ValidateUser(string id, IEnumerable<string> roleNames)
     {
         var userRoleIdsQuery = from u in this._usersCollection

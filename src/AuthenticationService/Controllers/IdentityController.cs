@@ -54,6 +54,13 @@ public class IdentityController : ControllerBase
             return BadRequest(NotExistingRole);
         }
 
+        var emailExist = await this._usersService.ValidateUserEmailExist(model.Email);
+
+        if (emailExist)
+        {
+            return BadRequest(emailExist);
+        }
+
         var user = new User
         {
             Email = model.Email,
