@@ -28,15 +28,11 @@ public class TeamsService : ITeamsService
     {
         var result = new Result<string>();
 
-        var teamsCollectionQuerable = this._teamsCollection.AsQueryable();
+        var exist = await this._teamsCollection
+            .Find(t => t.Name == name)
+            .AnyAsync();
 
-        var query = from t in teamsCollectionQuerable
-                    where t.Name == name
-                    select t;
-
-        var team = query.FirstOrDefault();
-
-        if (team != null)
+        if (exist)
         {
             result.AddErrors(TeamWithTheSameNameExceptionMessage);
             return result;
