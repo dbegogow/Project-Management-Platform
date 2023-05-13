@@ -1,7 +1,7 @@
-﻿using TeamService.Models.Messages;
-using TeamService.Models.Data;
+﻿using TeamService.Models.Data;
 using TeamService.Infrastructure.Extensions;
 using MongoDB.Driver;
+using Common.Models.Messages;
 using MassTransit;
 
 namespace TeamService.Consumers;

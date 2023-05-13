@@ -1,4 +1,5 @@
 using TeamService.Infrastructure.Extensions;
+using Common.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
