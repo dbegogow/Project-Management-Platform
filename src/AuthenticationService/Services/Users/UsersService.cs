@@ -10,8 +10,8 @@ public class UsersService : IUsersService
     private const string UsersCollectionName = "Users";
     private const string RolesCollectionName = "Roles";
 
-    private readonly IMongoQueryable<User> _usersCollection;
-    private readonly IMongoQueryable<Role> _rolesCollection;
+    private readonly IMongoCollection<User> _usersCollection;
+    private readonly IMongoCollection<Role> _rolesCollection;
 
     public UsersService(IConfiguration configuration)
     {
@@ -21,21 +21,17 @@ public class UsersService : IUsersService
         var mongoDb = mongoClient.GetDatabase(mongoDbConfiguration.Name);
 
         this._usersCollection = mongoDb
-            .GetCollection<User>(UsersCollectionName)
-            .AsQueryable();
+            .GetCollection<User>(UsersCollectionName);
 
         this._rolesCollection = mongoDb
-            .GetCollection<Role>(RolesCollectionName)
-            .AsQueryable();
+            .GetCollection<Role>(RolesCollectionName);
     }
 
     public async Task<bool> ValidateUserEmailExist(string email)
     {
-        var userQuery = from u in this._usersCollection
-                        where u.Email == email
-                        select u;
-
-        var user = await userQuery.FirstOrDefaultAsync();
+        var user = await this._usersCollection
+            .Find(u => u.Email == email)
+            .FirstOrDefaultAsync();
 
         if (user == null)
         {
@@ -47,23 +43,20 @@ public class UsersService : IUsersService
 
     public async Task<bool> ValidateUser(string id, IEnumerable<string> roleNames)
     {
-        var userRoleIdsQuery = from u in this._usersCollection
-                               where u.Id == id
-                               from r in u.Roles
-                               select r;
-
-        var userRoleId = userRoleIdsQuery.FirstOrDefault();
+        var userRoleId = await this._usersCollection
+            .Find(u => u.Id == id)
+            .Project(u => u.Roles.First())
+            .FirstOrDefaultAsync();
 
         if (userRoleId == null)
         {
             return await Task.FromResult(false);
         }
 
-        var userRoleNameQuery = from r in this._rolesCollection
-                                where r.Id == userRoleId
-                                select r.Name;
-
-        var userRoleName = userRoleNameQuery.FirstOrDefault();
+        var userRoleName = await this._rolesCollection
+            .Find(r => r.Id == userRoleId)
+            .Project(r => r.Name)
+            .FirstOrDefaultAsync();
 
         if (!roleNames.Contains(userRoleName))
         {
