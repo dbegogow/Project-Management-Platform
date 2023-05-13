@@ -1,4 +1,5 @@
 using AuthenticationService.Infrastructure.Extensions;
+using Common.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,4 +1,4 @@
-﻿using AuthenticationService.Models.Messages;
+﻿using Common.Models.Messages;
 using MassTransit;
 
 namespace AuthenticationService.Services.Publishing;
