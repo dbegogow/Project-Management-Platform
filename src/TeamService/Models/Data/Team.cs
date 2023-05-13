@@ -9,7 +9,7 @@ namespace TeamService.Models.Data;
 public class Team
 {
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
+    [BsonRepresentation(BsonType.String)]
     public string Id { get; init; }
 
     [BsonRequired]

@@ -6,7 +6,7 @@ namespace TeamService.Models.Data;
 public class User
 {
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
+    [BsonRepresentation(BsonType.String)]
     public string Id { get; init; }
 
     public string Username { get; init; }
