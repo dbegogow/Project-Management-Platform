@@ -11,7 +11,7 @@ public class Result<T>
 
     public T Data { get; set; }
 
-    public IReadOnlyCollection<string> Errors { get; init; }
+    public IReadOnlyCollection<string> Errors => this._errors;
 
     public bool Failure => this._errors.Any();
 

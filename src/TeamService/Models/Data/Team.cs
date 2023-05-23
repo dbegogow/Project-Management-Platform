@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
 
 using static TeamService.Infrastructure.Validations.Validations;
 
@@ -8,7 +9,7 @@ namespace TeamService.Models.Data;
 
 public class Team
 {
-    [BsonId]
+    [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
     [BsonRepresentation(BsonType.String)]
     public string Id { get; init; }
 
