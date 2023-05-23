@@ -10,8 +10,10 @@ namespace TeamService.Services.TeamsService;
 public class TeamsService : ITeamsService
 {
     private const string TeamsCollectionName = "Teams";
+    private const string UsersCollectionName = "Users";
 
     private readonly IMongoCollection<Team> _teamsCollection;
+    private readonly IMongoCollection<User> _usersCollection;
 
     public TeamsService(IConfiguration configuration)
     {
@@ -22,19 +24,35 @@ public class TeamsService : ITeamsService
 
         this._teamsCollection = mongoDb
             .GetCollection<Team>(TeamsCollectionName);
+
+        this._usersCollection = mongoDb
+            .GetCollection<User>(UsersCollectionName);
     }
 
     public async Task<Result<string>> Create(string name, string goals, IEnumerable<string> members)
     {
         var result = new Result<string>();
 
-        var exist = await this._teamsCollection
+        var teamExist = await this._teamsCollection
             .Find(t => t.Name == name)
             .AnyAsync();
 
-        if (exist)
+        if (teamExist)
         {
             result.AddErrors(TeamWithTheSameNameExceptionMessage);
+            return result;
+        }
+
+        var membersFilter = Builders<User>.Filter.In(u => u.Username, members);
+         
+        var membersIds = await this._usersCollection
+            .Find(membersFilter)
+            .Project(m => m.Id)
+            .ToListAsync();
+
+        if (membersIds.Count != members.Count())
+        {
+            result.AddErrors(InvalidUsernameExceptionMessage);
             return result;
         }
 
@@ -42,7 +60,7 @@ public class TeamsService : ITeamsService
         {
             Name = name,
             Goals = goals,
-            Members = members
+            Members = membersIds
         };
 
         await this._teamsCollection.InsertOneAsync(newTeam);

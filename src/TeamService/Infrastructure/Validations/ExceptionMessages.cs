@@ -3,4 +3,5 @@
 public class ExceptionMessages
 {
     public const string TeamWithTheSameNameExceptionMessage = "Already exist team with this name! Please choose another.";
+    public const string InvalidUsernameExceptionMessage = "Invalid username";
 }
