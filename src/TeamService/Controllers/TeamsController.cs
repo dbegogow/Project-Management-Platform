@@ -18,6 +18,7 @@ public class TeamsController : ControllerBase
         => this._teamsService = teamsService;
 
     [HttpGet]
+    [AuthorizeUser(AdminRole, ManagerRole)]
     public async Task<IActionResult> GetAll()
         => Ok(await this._teamsService.GetAll());
 
