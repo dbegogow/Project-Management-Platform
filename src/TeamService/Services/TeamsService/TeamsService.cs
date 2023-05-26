@@ -32,9 +32,15 @@ public class TeamsService : ITeamsService
     }
 
     public async Task<IEnumerable<TeamListResponseModel>> GetAll()
-    {
-        throw new NotImplementedException();
-    }
+        => await this._teamsCollection
+            .Find(_ => true)
+            .Project(t => new TeamListResponseModel
+            {
+                Name = t.Name,
+                Goals = t.Goals,
+                MembersUsernames = t.Members
+            })
+            .ToListAsync();
 
     public async Task<Result<string>> Create(string name, string goals, IEnumerable<string> members)
     {
