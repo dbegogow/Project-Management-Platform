@@ -2,6 +2,7 @@
 using TeamService.Models.Requests;
 using TeamService.Services.TeamsService;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 using static TeamService.Infrastructure.Constants.RoleConstants;
 
@@ -15,6 +16,10 @@ public class TeamsController : ControllerBase
 
     public TeamsController(ITeamsService teamsService)
         => this._teamsService = teamsService;
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+        => Ok(await this._teamsService.GetAll());
 
     [HttpPost]
     [AuthorizeUser(AdminRole, ManagerRole)]

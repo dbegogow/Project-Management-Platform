@@ -4,6 +4,8 @@ using TeamService.Models.Data;
 using MongoDB.Driver;
 
 using static TeamService.Infrastructure.Validations.ExceptionMessages;
+using TeamService.Models.Responses;
+using MongoDB.Bson;
 
 namespace TeamService.Services.TeamsService;
 
@@ -29,6 +31,11 @@ public class TeamsService : ITeamsService
             .GetCollection<User>(UsersCollectionName);
     }
 
+    public async Task<IEnumerable<TeamListResponseModel>> GetAll()
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<Result<string>> Create(string name, string goals, IEnumerable<string> members)
     {
         var result = new Result<string>();
@@ -44,13 +51,13 @@ public class TeamsService : ITeamsService
         }
 
         var membersFilter = Builders<User>.Filter.In(u => u.Username, members);
-         
-        var membersIds = await this._usersCollection
+
+        var membersUsernames = await this._usersCollection
             .Find(membersFilter)
-            .Project(m => m.Id)
+            .Project(m => m.Username)
             .ToListAsync();
 
-        if (membersIds.Count != members.Count())
+        if (membersUsernames.Count != members.Count())
         {
             result.AddErrors(InvalidUsernameExceptionMessage);
             return result;
@@ -60,7 +67,7 @@ public class TeamsService : ITeamsService
         {
             Name = name,
             Goals = goals,
-            Members = membersIds
+            Members = membersUsernames
         };
 
         await this._teamsCollection.InsertOneAsync(newTeam);
